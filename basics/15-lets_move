@@ -1,3 +1,3 @@
 #!/bin/bash
-find /tmp/sym -maxdepth 1 -type f -name '[A-Z]*' -exec mv {} /tmp/u\
-ls -la /tmp/sym
+ls -la /tmp/u | sort
+
