@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "$(whoami) $(groups | cut -d ':' -f 2)"
+echo $(whoami) $(groups $(whoami) | awk -F': ' '{print $2}')
