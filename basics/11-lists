@@ -1,2 +1,3 @@
 #!/bin/bash
-ls -la /boot
+ls -la . && echo && ls -la .. && echo && ls -la /boot
+
