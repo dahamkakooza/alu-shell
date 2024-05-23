@@ -1,3 +1,2 @@
 #!/bin/bash
-ls -la /tmp/u | sort
-
+ls -la /tmp/u
