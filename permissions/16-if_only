@@ -1,2 +1,2 @@
 #!/bin/bash
-if [ "$(stat -c "%U" hello)" = "guillaume" ]; then chown vincent hello; echo "Owner changed to 'vincent' for the file 'hello'."; else echo "The file 'hello' is not owned by 'guillaume'. No changes made."; fi
+if [ "$(stat -c "%U" hello)" = "guillaume" ]; then chown vincent hello; fi
