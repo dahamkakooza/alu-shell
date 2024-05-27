@@ -1,2 +1,2 @@
 #!/bin/bash
-printenv | tee /dev/tty | (set | (declare -F)) | less
+printenv | tee /dev/tty | (set | tee /dev/tty | declare -F) | less
