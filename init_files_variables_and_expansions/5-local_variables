@@ -1,2 +1,2 @@
 #!/bin/bash
-{ printf "Environment Variables:\n%s\n\nLocal Variables:\n%s\n\nFunctions:\n%s\n" "$(printenv)" "$(set -o posix; set)" "$(declare -F)"; } | less
+printenv | tee /dev/tty | (set -o posix; set) | less | declare -F
