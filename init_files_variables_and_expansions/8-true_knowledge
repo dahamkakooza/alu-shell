@@ -1,2 +1,2 @@
 #!/bin/bash
-TRUEKNOWLEDGE=89 echo -e "128\n$((128 + $TRUEKNOWLEDGE))"
+echo -e "128\n$((128 + 89))"
