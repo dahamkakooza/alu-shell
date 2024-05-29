@@ -1,2 +1,2 @@
 #!/bin/bash
-(printenv | tee /dev/tty) | (declare -p | tee /dev/tty) | (declare -F | tee /dev/tty) | less
+declare -p | grep '^declare -l' | cut -d' ' -f3 | cut -d= -f1 | xargs -I {} bash -c 'echo {}=${!{}}
