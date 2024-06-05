@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Combined manage_my_process script with management commands
+# Script to manage the lifecycle of manage_my_process
 
 PIDFILE="/var/run/my_process.pid"
 PROCESS_NAME="manage_my_process"
@@ -36,8 +36,7 @@ restart() {
     if [ -f "$PIDFILE" ]; then
         stop
     fi
-    manage_my_process &
-    echo $! > "$PIDFILE"
+    start
     echo "$PROCESS_NAME restarted"
 }
 
@@ -52,7 +51,7 @@ case "$1" in
         restart
         ;;
     *)
-        echo "Usage: manage_my_process {start|stop|restart}"
+        echo "Usage: $0 {start|stop|restart}"
         exit 1
         ;;
 esac
