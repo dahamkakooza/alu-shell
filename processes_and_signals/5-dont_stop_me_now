@@ -2,10 +2,8 @@
 # This script stops the 4-to_infinity_and_beyond process.
 for pid in /proc/[0-9]*; do
   if [ -f "$pid/cmdline" ]; then
-    cmdline=$(cat "$pid/cmdline" | tr '\0' ' ')
-    if [[ $cmdline == *4-to_infinity_and_beyond* ]]; then
+    if tr '\0' ' ' < "$pid/cmdline" | grep -q "4-to_infinity_and_beyond"; then
       kill "$pid"
-      echo "4-to_infinity_and_beyond process ($pid) has been terminated."
     fi
   fi
 done
