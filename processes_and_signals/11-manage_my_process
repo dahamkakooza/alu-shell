@@ -28,13 +28,18 @@ stop() {
         exit 1
     fi
     kill "$(cat $PIDFILE)"
-    rm "$PIDFILE"
-    echo "$PROCESS_NAME stopped"
+    if [ $? -eq 0 ]; then
+        rm "$PIDFILE"
+        echo "$PROCESS_NAME stopped"
+    else
+        echo "Failed to stop $PROCESS_NAME"
+        exit 1
+    fi
 }
 
 restart() {
     if [ -f "$PIDFILE" ]; then
-        stop
+        stop > /dev/null 2>&1
     fi
     start
     echo "$PROCESS_NAME restarted"
