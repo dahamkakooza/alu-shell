@@ -33,8 +33,11 @@ stop() {
 }
 
 restart() {
-    stop
-    start
+    if [ -f "$PIDFILE" ]; then
+        stop
+    fi
+    manage_my_process &
+    echo $! > "$PIDFILE"
     echo "$PROCESS_NAME restarted"
 }
 
@@ -49,7 +52,7 @@ case "$1" in
         restart
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart}"
+        echo "Usage: manage_my_process {start|stop|restart}"
         exit 1
         ;;
 esac
