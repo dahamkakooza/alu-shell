@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 # This script stops the 4-to_infinity_and_beyond process.
+found=0
+# Loop through /proc to find processes containing "4-to_infinity_and_beyond"
 for pid in /proc/[0-9]*; do
-  if [ -f "$pid/cmdline" ]; then
+  # Check if the cmdline file exists and is readable
+  if [ -r "$pid/cmdline" ]; then
+    # Read the cmdline file, replace null characters with spaces, and grep for the process name
     if tr '\0' ' ' < "$pid/cmdline" | grep -q "4-to_infinity_and_beyond"; then
-      kill "$pid"
+      # Extract the process ID from the /proc path
+      proc_id=$(basename "$pid")
+      # Kill the process
+      kill "$proc_id"
+      found=1
     fi
   fi
 done
