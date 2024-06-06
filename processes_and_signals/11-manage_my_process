@@ -1,49 +1,77 @@
 #!/usr/bin/env bash
-# This init script manages the manage_my_process script
+# This script manages itself, allowing it to be started, stopped, and restarted, and writes "I am alive!" to /tmp/my_process every 2 seconds indefinitely.
 
-# Path to the manage_my_process script
-SCRIPT="/path/to/manage_my_process"
-# PID file
-PIDFILE="/var/run/my_process.pid"
+PROCESS_NAME="manage_my_process"
+PID_FILE="/var/run/my_process.pid"
 
-start() {
-    echo "Starting manage_my_process..."
-    $SCRIPT &
-    echo $! > $PIDFILE
-    echo "manage_my_process started"
-}
-
-stop() {
-    if [ -f $PIDFILE ]; then
-        PID=$(cat $PIDFILE)
-        echo "Stopping manage_my_process..."
-        kill $PID
-        rm -f $PIDFILE
-        echo "manage_my_process stopped"
+# Function to check if the process is running
+is_running() {
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat "$PID_FILE")
+        if [ -n "$PID" ] && ps -p "$PID" > /dev/null 2>&1; then
+            return 0
+        else
+            rm -f "$PID_FILE"
+            return 1
+        fi
     else
-        echo "No manage_my_process PID file found"
+        return 1
     fi
 }
 
-restart() {
-    echo "Restarting manage_my_process..."
-    stop
-    start
-    echo "manage_my_process restarted"
+# Function to start the process
+start_process() {
+    if is_running; then
+        echo "$PROCESS_NAME is already running."
+    else
+        nohup "$0" run &> /dev/null &
+        echo $! > "$PID_FILE"
+        echo "$PROCESS_NAME started"
+    fi
 }
 
+# Function to stop the process
+stop_process() {
+    if is_running; then
+        kill "$(cat "$PID_FILE")"
+        rm -f "$PID_FILE"
+        echo "$PROCESS_NAME stopped"
+    else
+        echo "$PROCESS_NAME is not running."
+    fi
+}
+
+# Function to restart the process
+restart_process() {
+    stop_process
+    start_process
+    echo "$PROCESS_NAME restarted"
+}
+
+# Function to run the process
+run_process() {
+    while true; do
+        echo "I am alive!" >> /tmp/my_process
+        sleep 2
+    done
+}
+
+# Check positional parameters and execute the corresponding function
 case "$1" in
     start)
-        start
+        start_process
         ;;
     stop)
-        stop
+        stop_process
         ;;
     restart)
-        restart
+        restart_process
+        ;;
+    run)
+        run_process
         ;;
     *)
-        echo "Usage: manage_my_process {start|stop|restart}"
+        echo "Usage: $0 {start|stop|restart}"
         exit 1
         ;;
 esac
