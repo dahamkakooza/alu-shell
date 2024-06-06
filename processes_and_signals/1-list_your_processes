@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 # Display a list of all currently running processes for all users, including those without a TTY
-ps -ef --forest
+# in a user-oriented format, showing the process hierarchy.
+# Using ps command with appropriate options to ensure comprehensive details
+ps -eo user,pid,ppid,%cpu,%mem,vsz,rss,tty,stat,start,time,cmd --forest
