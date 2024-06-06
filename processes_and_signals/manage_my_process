@@ -28,9 +28,13 @@ stop() {
         echo "$PROCESS_NAME is not running"
         exit 1
     fi
-    kill "$(cat "$PIDFILE")" &> /dev/null
-    rm "$PIDFILE"
-    echo "$PROCESS_NAME stopped"
+    if kill "$(cat "$PIDFILE")" &> /dev/null; then
+        rm "$PIDFILE"
+        echo "$PROCESS_NAME stopped"
+    else
+        echo "Failed to stop $PROCESS_NAME"
+        exit 1
+    fi
 }
 
 restart() {
