@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# Combined manage_my_process script with management commands
-
+#combined script
 PIDFILE="/var/run/my_process.pid"
 PROCESS_NAME="manage_my_process"
-ANSWER_FILE_NAME="/tmp/my_process"
 
 manage_my_process() {
     while true
     do
-        echo "I am alive!" >> "$ANSWER_FILE_NAME"
+        echo "I am alive!" >> /tmp/my_process
         sleep 2
     done
 }
@@ -18,7 +16,7 @@ start() {
         echo "$PROCESS_NAME is already running"
         exit 1
     fi
-    manage_my_process &> /dev/null &
+    manage_my_process &
     echo $! > "$PIDFILE"
     echo "$PROCESS_NAME started"
 }
@@ -28,23 +26,16 @@ stop() {
         echo "$PROCESS_NAME is not running"
         exit 1
     fi
-    if kill "$(cat "$PIDFILE")" &> /dev/null; then
-        rm "$PIDFILE"
-        echo "$PROCESS_NAME stopped"
-    else
-        echo "Failed to stop $PROCESS_NAME"
-        exit 1
-    fi
+    kill "$(cat $PIDFILE)"
+    rm "$PIDFILE"
+    echo "$PROCESS_NAME stopped"
 }
 
 restart() {
-    stop > /dev/null 2>&1
-    start > /dev/null 2>&1
-    echo "$PROCESS_NAME restarted"
-}
-
-usage() {
-    echo "Usage: manage_my_process {start|stop|restart}" >&2
+    if [ -f "$PIDFILE" ]; then
+        stop
+    fi
+    start
 }
 
 case "$1" in
@@ -58,7 +49,7 @@ case "$1" in
         restart
         ;;
     *)
-        usage
+        echo "Usage: $0 {start|stop|restart}"
         exit 1
         ;;
 esac
