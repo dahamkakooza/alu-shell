@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Get the process ID (PID) of the "7-highlander" process
 PID=$(pgrep -f "7-highlander")
-# If the process is running, send a termination signal
+# If the process is running, use gdb to send a termination signal
 if [ -n "$PID" ]; then
-    # Send SIGTERM signal to the process by writing to its /proc/<PID>/status file
-    echo -n "T" > /proc/$PID/status
+    # Use gdb to send SIGKILL to the process
+    echo "Attaching gdb to PID $PID to terminate it"
+    gdb -batch -ex "attach $PID" -ex "set confirm off" -ex "signal SIGKILL" -ex "detach" -ex "quit"
 fi
