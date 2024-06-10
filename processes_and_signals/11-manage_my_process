@@ -77,7 +77,7 @@ case "$1" in
         run_process
         ;;
     *)
-        echo "Usage: $manage_my_process {start|stop|restart}"
+        echo "Usage: manage_my_process {start|stop|restart}"
         exit 1
         ;;
 esac
