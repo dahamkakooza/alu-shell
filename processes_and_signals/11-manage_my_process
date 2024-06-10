@@ -43,11 +43,17 @@ stop_process() {
 
 # Function to restart the process
 restart_process() {
-    stop_process
-    start_process
-    echo "$PROCESS_NAME restarted"
+     if is_running; then
+        kill "$(cat "$PID_FILE")"
+        rm -f "$PID_FILE"
+     fi
+       if is_running; then
+            
+        nohup "$0" run &> /dev/null &
+        echo $! > "$PID_FILE"
+           fi  
+  echo "manage_my_process restarted"
 }
-
 # Function to run the process
 run_process() {
     while true; do
@@ -71,7 +77,7 @@ case "$1" in
         run_process
         ;;
     *)
-        echo "Usage: $0 {start|stop|restart}"
+        echo "Usage: $manage_my_process {start|stop|restart}"
         exit 1
         ;;
 esac
